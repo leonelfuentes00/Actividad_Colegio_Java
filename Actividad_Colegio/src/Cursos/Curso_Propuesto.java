@@ -70,22 +70,6 @@ public class Curso_Propuesto {
 
                 }
 
-                /*Object[] Modulos2 = new Object[ModulosTable.getRowCount()];
-
-                int ModulosConteo = ModulosTabla.getRowCount();
-                System.out.println(ModulosConteo);
-                for (int i = 0; i  <ModulosConteo; i++){
-
-                    Modulos2[i] = ModulosTable.getValueAt(i, 0);
-
-                    if (i == ModulosTable.getRowCount() - 1){
-                        List<Object> Lista = new ArrayList<>();
-                        Lista.add(Modulos2[i]);
-                        System.out.println(Lista);
-                    }
-
-                }*/
-
             }
         });
         Agregar_Modulo_Button.addActionListener(new ActionListener() {
