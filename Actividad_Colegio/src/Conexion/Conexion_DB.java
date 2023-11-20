@@ -44,4 +44,15 @@ public class Conexion_DB
         }
         return con;
     }
+    public void desconectar() {
+        try {
+            if (con != null && !con.isClosed()) {
+                con.close();
+                System.out.println("Conexión cerrada correctamente");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
+    }
 }
