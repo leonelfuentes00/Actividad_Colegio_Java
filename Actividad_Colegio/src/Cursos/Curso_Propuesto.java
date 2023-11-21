@@ -106,6 +106,16 @@ public class Curso_Propuesto {
         });
     }
 
+    public void setVisibleCurso() {
+        JFrame frame = new JFrame("Proponer Curso");
+        frame.setContentPane(Curso_PropuestoJP);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setSize(800,600);
+        frame.setVisible(true);
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Proponer Curso");
         frame.setContentPane(new Curso_Propuesto().Curso_PropuestoJP);
