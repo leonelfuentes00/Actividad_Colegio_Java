@@ -11,8 +11,11 @@ public class Conexion_DB
     public static final String username = "root";
     public static final String password = "root";
     public static final String driver = "com.mysql.cj.jdbc.Driver";
-    public static Connection con;
 
+    public Connection con;
+    public Connection cc() {
+        return con;
+    }
     public Connection getConexion ()
     {
         try

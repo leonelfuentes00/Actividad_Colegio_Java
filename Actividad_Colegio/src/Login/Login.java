@@ -2,12 +2,14 @@ package Login;
 
 import Conexion.*;
 import Cursos.Curso_Propuesto;
-import Formularios_Registro.Registro_Usuario;
+import Usuarios.Administrativo.Interfaces.Formularios_Registro.Registro_Usuario;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Login {
     private JPanel LoginPanel;
@@ -15,6 +17,12 @@ public class Login {
     private JButton LoginButton;
     private JPasswordField ContraseñaText;
     private JButton registroButton;
+    private  static Login instance;
+    private boolean credencialesValidas = false;
+    private final Conexion_DB r = new Conexion_DB();
+    private  int tipoUsuario;
+    private int ID_USUARIO;
+    private  long user;
 
     public Login() {
 
@@ -32,7 +40,7 @@ public class Login {
                 con.conectar();
 
                 try {
-                    PreparedStatement ps = Conexion_DB.con.prepareStatement(sqlUser);
+                    PreparedStatement ps = con.con.prepareStatement(sqlUser);
                     ps.setInt(1, idPersona);
 
                     ResultSet rs = ps.executeQuery();
@@ -46,7 +54,7 @@ public class Login {
                         String sqlTipoUser = "SELECT FK_ID_Usuario FROM Tipos_Usuarios WHERE FK_ID_Usuario = ?";
                         if (contraseñaIngresada.equals(contraseña)) {
                             try {
-                                PreparedStatement ps2 = Conexion_DB.con.prepareStatement(sqlTipoUser);
+                                PreparedStatement ps2 = con.con.prepareStatement(sqlTipoUser);
                                 ps2.setInt(1, idPersona);
 
                                 ResultSet rs2 = ps2.executeQuery();
@@ -96,7 +104,7 @@ public class Login {
                 Conexion_DB con = new Conexion_DB();
                 con.conectar();
                 try {
-                    PreparedStatement ps = Conexion_DB.con.prepareStatement(sqlBuscarIdPersona);
+                    PreparedStatement ps = con.con.prepareStatement(sqlBuscarIdPersona);
                     ps.setString(1, numeroDocumento);
 
                     ResultSet rs = ps.executeQuery();
@@ -120,14 +128,89 @@ public class Login {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Registro_Usuario reg = new Registro_Usuario();
-                reg.setVisibleRegistrar();
+                reg.setVisibleRegistrar(true);
             }
         });
     }
+    public static Login getInstance() {
+        if (instance == null) {
+            instance = new Login();
+        }
+        return instance;
+    }
 
-    public void setVisibleLogin() {
+    private void consultarCredenciales()  throws SQLException {
+
+        r.conectar();
+
+        long user;
+        String contraseña;
+
+        try {
+            user = Long.parseLong(UsuarioText.getText());
+            contraseña = ContraseñaText.getText();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(null, "Los datos introducidos son incorrectos");
+            return;
+        }
+
+        String login = "SELECT * FROM usuarios";
+
+        ResultSet rs;
+        PreparedStatement ps;
+
+        try {
+            ps = r.cc().prepareStatement(login);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int id = rs.getInt(1);
+                int getID = rs.getInt(1);
+                int getUSER = rs.getInt(2);
+                String getContraseña = rs.getString(3);
+                tipoUsuario = rs.getInt(4);
+
+                if (getUSER == user && getID == id && getContraseña.equals(contraseña)) {
+                    credencialesValidas = true;
+                    break;
+                }
+            }
+
+        } catch (SQLException d) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, d);
+        }
+    }
+
+    private void getUsuario(){
+
+        r.conectar();
+
+        user = Long.parseLong(UsuarioText.getText());
+
+        String sql = "SELECT id FROM usuarios WHERE usuario = ?";
+        PreparedStatement ps;
+        ResultSet rs;
+
+        try {
+            ps = r.cc().prepareStatement(sql);
+            ps.setLong(1, user);
+            rs = ps.executeQuery();
+
+            while (rs.next()){
+                ID_USUARIO = rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public int getID_USUARIO(){
+        return ID_USUARIO;
+    }
+
+    public void setVisibleLogin(boolean visible) {
         JFrame frame = new JFrame("Login");
-        frame.setContentPane(LoginPanel); // Utiliza el panel directamente
+        frame.setContentPane(LoginPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -137,7 +220,7 @@ public class Login {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 Login login = new Login();
-                login.setVisibleLogin();
+                login.setVisibleLogin(true);
             }
         });
     }

@@ -55,8 +55,6 @@ public class Curso_Propuesto {
         Turnos_Cursos_ButtonGroup.add(TardeRadioButton);
         Turnos_Cursos_ButtonGroup.add(NocheRadioButton);
 
-
-
         ProponerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -67,9 +65,7 @@ public class Curso_Propuesto {
                 {
                     String mesi = ModulosTabla.getValueAt(i,0).toString();
                     System.out.println(mesi);
-
                 }
-
             }
         });
         Agregar_Modulo_Button.addActionListener(new ActionListener() {

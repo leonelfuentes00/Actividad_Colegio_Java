@@ -1,10 +1,9 @@
-import Formularios_Registro.Registro_Usuario;
 import Login.Login;
 
 public class Main
 {
      public static void main(String[] args) {
         Login reg = new Login();
-        reg.setVisibleLogin();
+        reg.setVisibleLogin(true);
     }
 }
