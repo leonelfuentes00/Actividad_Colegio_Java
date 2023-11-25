@@ -1,5 +1,0 @@
-
-1: Cambiar Consultas a las de la db en CargaABD
-2: Cambiar Consultas en MetodosGestionAlumnos
-3: Cambiar Consultas en MetodosGestionDocentes
-4: Actualizar login (eliminar variables y metodos relacionadas a registros en la clase)
