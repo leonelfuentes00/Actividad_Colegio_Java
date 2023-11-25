@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="Docentes.InterfaceDocente.GestionCursos">
+  <grid id="27dc6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="3573f" binding="cursosPanel" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="5" left="5" bottom="5" right="5"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-13091672"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <scrollpane id="351cb">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13091672"/>
+            </properties>
+            <border type="line" title="Mis cursos">
+              <title-color color="-16777216"/>
+              <color color="-16777216"/>
+            </border>
+            <children>
+              <component id="3fef7" class="javax.swing.JTable" binding="tablaMisCursos">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="7bd9">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13091672"/>
+            </properties>
+            <border type="line" title="Lista de alumnos">
+              <title-color color="-16777216"/>
+              <color color="-16777216"/>
+            </border>
+            <children>
+              <component id="5f676" class="javax.swing.JTable" binding="tablaAlumnos">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="862a1" class="javax.swing.JButton" binding="APROBARCURSADAButton" default-binding="true">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="APROBAR CURSADA"/>
+            </properties>
+          </component>
+          <component id="80db7" class="javax.swing.JButton" binding="DESAPROBARCURSADAButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="DESAPROBAR CURSADA"/>
+            </properties>
+          </component>
+          <component id="6acf5" class="javax.swing.JButton" binding="EXPULSARDELCURSOButton" default-binding="true">
+            <constraints>
+              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="EXPULSAR DEL CURSO"/>
+            </properties>
+          </component>
+          <component id="76d74" class="javax.swing.JButton" binding="ALTERARCALIFICACIONButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="ALTERAR CALIFICACION"/>
+            </properties>
+          </component>
+          <component id="b10b9" class="javax.swing.JButton" binding="CERRARINSCRIPCIONESButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="CERRAR INSCRIPCIONES"/>
+            </properties>
+          </component>
+          <component id="24fed" class="javax.swing.JButton" binding="FINALIZARCURSOButton" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="FINALIZAR CURSO"/>
+            </properties>
+          </component>
+          <component id="ba4c4" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font size="18"/>
+              <foreground color="-16777216"/>
+              <text value="GESTIÓN DE CURSOS"/>
+            </properties>
+          </component>
+          <component id="35bea" class="javax.swing.JButton" binding="CARGARALUMNOSButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="CARGAR ALUMNOS "/>
+            </properties>
+          </component>
+          <component id="d9981" class="javax.swing.JButton" binding="regresarButton" default-binding="true">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Regresar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
