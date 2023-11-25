@@ -1,0 +1,16 @@
+
+1: Cambiar Consultas a las de la db en CargaABD (Administrativo)
+2: Cambiar Consultas en MetodosGestionAlumnos
+3: Cambiar Consultas en MetodosGestionDocentes
+4: Actualizar login (eliminar variables y metodos relacionadas a registros en la clase)
+5: Terminar el metodo CrearCurso
+6: Cambiar Consultas en CargaAlumnos
+7: Cambiar Consultas en CargaGestionCursos
+8: Cambiar Consultas en CargaABD (Docentes)
+9: Modificar la obtencion de datos de combobox a obtencion de jTable EN CargaABD (Docentes)
+
+
+
+
+
+
