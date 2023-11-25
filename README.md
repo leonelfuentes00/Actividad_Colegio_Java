@@ -5,8 +5,8 @@ Sistema de gestión de Cursos del Centro de Formación Laboral 404. Escrito en J
 
 Por:
 
-Arqueros Ian Alexis
-Islas Lautaro Eloy
-Fuentes Aaron Leonel
+•	Arqueros Ian Alexis
+•	Islas Lautaro Eloy
+•	Fuentes Aaron Leonel
 
 Diciembre 2023
