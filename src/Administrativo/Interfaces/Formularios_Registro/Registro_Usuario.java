@@ -13,13 +13,13 @@ public class Registro_Usuario {
     private JPanel Formulario_IdentidadJP;
     private JPanel Titulo_Paso1JP;
     private JPanel Ingresar_Datos_IdentidadJP;
-    private JComboBox Tipo_DocumentoCombobox;
+    private JComboBox<String> Tipo_DocumentoCombobox;
     private JTextField NombreText;
     private JTextField ApellidoText;
     private JTextField Fecha_NacimientoText;
     private JTextField NacionalidadText;
     private JTextField Numero_DocumentoText;
-    private JComboBox SexoCombobox;
+    private JComboBox<String> SexoCombobox;
     private JButton SiguienteButton1;
     private JPanel Formulario_UbicacionJP;
     private JPanel Titulo_Paso2JP;
@@ -48,11 +48,12 @@ public class Registro_Usuario {
     private JButton VolverButton;
     private JButton VolverButton2;
     private JButton FinalizarButton;
-    private JComboBox Nombre_Institucion_comboBox;
-    private JComboBox Ciudad_Sede_comboBox;
-    private JComboBox Calle_Sede_ComboBox;
+    private JComboBox<String> Nombre_Institucion_comboBox;
+    private JComboBox<String> Ciudad_Sede_comboBox;
+    private JComboBox<String> Calle_Sede_ComboBox;
     private JTextField Altura_Calle_SedeText;
     private JTextField Fecha_Ingreso_Text;
+    private JComboBox<String> comboBoxUser;
     ButtonGroup Grupo_Botones_Radio_Afiliado = new ButtonGroup();
     ButtonGroup Grupo_Botones_Radio_Tipo_Domicilio = new ButtonGroup();
     private int idInst;
@@ -66,6 +67,10 @@ public class Registro_Usuario {
     //---------------------------------------------------------------------------------------------------------------------------------------------------
 
     public Registro_Usuario () {
+
+        comboBoxUser.addItem("1 - Administrativo");
+        comboBoxUser.addItem("2 - Docente");
+        comboBoxUser.addItem("3 - Alumno");
 
         LocalDate Fecha = LocalDate.now();
         Fecha_Ingreso_Text.setText(String.valueOf(Fecha));
@@ -324,6 +329,7 @@ public class Registro_Usuario {
                 }
                 //------------------------------------------------------------
 
+
                 try
                 {
                     Conexion_DB cone = new Conexion_DB();
@@ -379,6 +385,7 @@ public class Registro_Usuario {
 
                     ps.executeUpdate();
 
+                    setUsuario();
                 }
                 catch (Exception a)
                 {
@@ -440,6 +447,38 @@ public class Registro_Usuario {
                 Cuil_Empresa_AfiliadoText.setEnabled(true);
             }
         });
+
+    }
+
+    private void setUsuario() throws SQLException {
+
+        int ID = 0;
+
+        String SQL = "INSERT INTO tipos_usuarios (FK_ID_USUARIO, FK_ID_PERSONA) values (?,?);";
+        String select = "SELECT ID_Persona FROM personas ORDER BY ID_Persona DESC LIMIT 1;";
+
+        PreparedStatement ps = con.prepareStatement(select);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()){
+            ID = rs.getInt("ID_Persona");
+        }
+
+        PreparedStatement ps2 = con.prepareStatement(SQL);
+
+        int user = 0;
+        if (comboBoxUser.getSelectedIndex() == 1){
+            user = 1;
+        } else if (comboBoxUser.getSelectedIndex() == 2){
+            user = 2;
+        } else if (comboBoxUser.getSelectedIndex() == 3){
+            user = 3;
+        } else {
+            JOptionPane.showMessageDialog(null, "Opción de usuario inválida");
+        }
+
+        ps2.setInt(1, user);
+        ps2.setInt(2, ID);
 
     }
 

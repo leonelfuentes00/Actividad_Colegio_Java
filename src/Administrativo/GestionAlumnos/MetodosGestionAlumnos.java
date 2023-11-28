@@ -119,7 +119,32 @@ public class MetodosGestionAlumnos {
 
         r.conectar();
 
-        String sql = "SELECT id, nombre, dni, fecha_nac, direccion, telefono FROM alumnos;";
+        String sql = "SELECT DISTINCT " +
+                "NP.FK_ID_Persona, " +
+                "N.Nombre, " +
+                "A.Apellido, " +
+                "TD.Tipo_Documento, " +
+                "DP.Numero_Documento, " +
+                "SP.FK_ID_Sexo, " +
+                "T.Numero_Telefono, " +
+                "CE.Correo_Electronico, " +
+                "P.Habilitado " +  // Agregada la columna "Habilitado"
+                "FROM " +
+                "Nombres_Personas NP " +
+                "JOIN Nombres N ON NP.FK_ID_Nombre = N.ID_Nombre " +
+                "JOIN Apellidos_Personas AP ON NP.FK_ID_Persona = AP.FK_ID_Persona " +
+                "JOIN Apellidos A ON AP.FK_ID_Apellido = A.ID_Apellido " +
+                "JOIN Documentos_Personas DP ON NP.FK_ID_Persona = DP.FK_ID_Persona " +
+                "JOIN Tipos_Documentos TD ON DP.FK_ID_Tipo_Documento = TD.ID_Tipo_Documento " +
+                "JOIN Sexos_Personas SP ON NP.FK_ID_Persona = SP.FK_ID_Persona " +
+                "JOIN Telefonos_Personas TP ON NP.FK_ID_Persona = TP.FK_ID_Persona " +
+                "JOIN Telefonos T ON TP.FK_ID_Telefono = T.ID_Telefono " +
+                "JOIN Correos_Electronicos_Personas CEP ON NP.FK_ID_Persona = CEP.FK_ID_Persona " +
+                "JOIN Correos_Electronicos CE ON CEP.FK_ID_Correo_Electronico = CE.ID_Correo_Electronico " +
+                "JOIN Tipos_Usuarios TU ON TU.FK_ID_Persona = NP.FK_ID_Persona " +
+                "JOIN Personas P ON P.ID_Persona = NP.FK_ID_Persona " + // Agregada la tabla Personas
+                "WHERE " +
+                "TU.FK_ID_Usuario = 3;";
 
         ResultSet rs;
         PreparedStatement ps;

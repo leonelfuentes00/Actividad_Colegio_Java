@@ -15,8 +15,9 @@ public class GestorCursos {
     private JTable TablaCursos;
     private JButton CancelarCurso;
     private JButton ReiniciarCurso;
-    private JButton AgregarCurso;
     private JButton Regresar;
+
+    private JButton AgregarCurso;
     private final CargaABD carga = new CargaABD();
 
     public GestorCursos() throws SQLException {
@@ -25,9 +26,7 @@ public class GestorCursos {
 
         cursos.addColumn("ID");
         cursos.addColumn("NOMBRE");
-        cursos.addColumn("DESCRIPCION");
-        cursos.addColumn("ESTADOS");
-        cursos.addColumn("RESPONSABLE");
+        cursos.addColumn("ESTADO");
         cursos.addColumn("TOPE ALUMNOS");
 
         carga.cargarCursos(TablaCursos, cursos);
@@ -107,6 +106,12 @@ public class GestorCursos {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
+
+            }
+        });
+        AgregarCurso.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
 
             }
         });

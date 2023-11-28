@@ -109,7 +109,7 @@ public class CargaABD {
                 ID_CURSO = rs3.getInt("id"); //Obtiene el ID correspondiente
             }
 
-            if (crear.getComboBox().equals("Sin requisitos")) { //SE USA TABLA NO COMBOBOX
+            /*if (crear.getComboBox().equals("Sin requisitos")) { //SE USA TABLA NO COMBOBOX
                 JOptionPane.showMessageDialog(null, "Curso creado sin requisitos");
             } else {
                 //Inserta en la tabla de requisitos si es que existen
@@ -117,7 +117,7 @@ public class CargaABD {
                 ps6.setInt(1, ID_CURSO);
                 ps6.setInt(2, ID_CURSOREQUISITO);
                 ps6.executeUpdate();
-            }
+            }*/
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Error al crear el curso");
@@ -136,7 +136,7 @@ public class CargaABD {
         }
     }
 
-    public void getNombreCursoRequisito() {
+  /*  public void getNombreCursoRequisito() {
 
         r.conectar();
 
@@ -157,7 +157,7 @@ public class CargaABD {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
+    } */
 
     public void changePassword() throws SQLException {
 

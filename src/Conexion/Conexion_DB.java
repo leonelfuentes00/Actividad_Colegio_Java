@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Conexion_DB
 {
     public static final String url = "jdbc:mysql://localhost:3306/";
-    public static final String DB = "colegio_ctrz?useSSL=false&serverTimezone=America/Argentina/Buenos_Aires";
+    public static final String DB = "colegio_ctrz?useSSL=false&serverTimezone=America/Argentina/Buenos_Aires&allowPublicKeyRetrieval=true";
     public static final String username = "root";
     public static final String password = "root";
     public static final String driver = "com.mysql.cj.jdbc.Driver";

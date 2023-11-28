@@ -106,13 +106,38 @@ public class MetodosGestionDocentes {
         }
     }
 
-    public void generarTablas(){
+    public void generarTablas() {
 
         DefaultTableModel docentesInscriptos = new DefaultTableModel();
 
         r.conectar();
 
-        String sql = "SELECT usuarios.id, docentes.nombre, docentes.dni, docentes.telefono, usuarios.habilitado FROM docentes INNER JOIN usuarios WHERE docentes.dni = usuarios.usuario;;";
+        String sql = "SELECT DISTINCT " +
+                "NP.FK_ID_Persona, " +
+                "N.Nombre, " +
+                "A.Apellido, " +
+                "TD.Tipo_Documento, " +
+                "DP.Numero_Documento, " +
+                "SP.FK_ID_Sexo, " +
+                "T.Numero_Telefono, " +
+                "CE.Correo_Electronico, " +
+                "P.Habilitado " +  // Agregada la columna "Habilitado"
+                "FROM " +
+                "Nombres_Personas NP " +
+                "JOIN Nombres N ON NP.FK_ID_Nombre = N.ID_Nombre " +
+                "JOIN Apellidos_Personas AP ON NP.FK_ID_Persona = AP.FK_ID_Persona " +
+                "JOIN Apellidos A ON AP.FK_ID_Apellido = A.ID_Apellido " +
+                "JOIN Documentos_Personas DP ON NP.FK_ID_Persona = DP.FK_ID_Persona " +
+                "JOIN Tipos_Documentos TD ON DP.FK_ID_Tipo_Documento = TD.ID_Tipo_Documento " +
+                "JOIN Sexos_Personas SP ON NP.FK_ID_Persona = SP.FK_ID_Persona " +
+                "JOIN Telefonos_Personas TP ON NP.FK_ID_Persona = TP.FK_ID_Persona " +
+                "JOIN Telefonos T ON TP.FK_ID_Telefono = T.ID_Telefono " +
+                "JOIN Correos_Electronicos_Personas CEP ON NP.FK_ID_Persona = CEP.FK_ID_Persona " +
+                "JOIN Correos_Electronicos CE ON CEP.FK_ID_Correo_Electronico = CE.ID_Correo_Electronico " +
+                "JOIN Tipos_Usuarios TU ON TU.FK_ID_Persona = NP.FK_ID_Persona " +
+                "JOIN Personas P ON P.ID_Persona = NP.FK_ID_Persona " + // Agregada la tabla Personas
+                "WHERE " +
+                "TU.FK_ID_Usuario = 2;";
 
         ResultSet rs;
         PreparedStatement ps;
@@ -126,8 +151,12 @@ public class MetodosGestionDocentes {
 
             docentesInscriptos.addColumn("ID");
             docentesInscriptos.addColumn("NOMBRE");
-            docentesInscriptos.addColumn("DNI");
-            docentesInscriptos.addColumn("TELEFONO");
+            docentesInscriptos.addColumn("APELLIDO");
+            docentesInscriptos.addColumn("TIPO DOC");
+            docentesInscriptos.addColumn("NUM DOC");
+            docentesInscriptos.addColumn("SEXO");
+            docentesInscriptos.addColumn("TELÉFONO");
+            docentesInscriptos.addColumn("CORREO ELECTRÓNICO");
             docentesInscriptos.addColumn("HABILITADO");
 
             while (rs.next()) {
@@ -151,28 +180,39 @@ public class MetodosGestionDocentes {
         int id = 0;
 
         r.conectar();
-        String getID = "SELECT usuarios.id FROM usuarios INNER JOIN docentes WHERE docentes.usuario = usuarios.id";
+
+        String getID = "SELECT personas.ID_Persona, personas.Contrasena " +
+                "FROM personas " +
+                "INNER JOIN docentes ON docentes.FK_ID_Persona = personas.ID_Persona " +
+                "INNER JOIN usuarios ON usuarios.ID_Usuario = personas.FK_ID_Usuario " +
+                "WHERE usuarios.Habilitado = 1 AND usuarios.ID_Usuario = 2";
+
         PreparedStatement pq;
         ResultSet rs;
 
         pq = r.cc().prepareStatement(getID);
         rs = pq.executeQuery();
 
-        while (rs.next()){
-            id = rs.getInt("id");
+        if (rs.next()) {
+            id = rs.getInt("ID_Persona");
+            String contrasena = rs.getString("contrasena");
+
+
+            PreparedStatement ps;
+            String SQL = "UPDATE personas SET Contrasena = ? WHERE ID_Persona = ?";
+            ps = r.cc().prepareStatement(SQL);
+            ps.setString(1, contrasena);
+            ps.setInt(2, id);
+            ps.executeUpdate();
         }
 
-        PreparedStatement ps;
-        String SQL = "UPDATE usuarios SET contraseña = usuario WHERE id = ?";
-        ps = r.cc().prepareStatement(SQL);
-        ps.setInt(1, id);
-        ps.executeUpdate();
-
+        rs.close();
+        pq.close();
     }
     public boolean consultarHabilitado(){
 
         int row = gestor.getTabla().getSelectedRow();
-        return (boolean) gestor.getTabla().getValueAt(row, 4);
+        return (boolean) gestor.getTabla().getValueAt(row, 8);
 
     }
 }

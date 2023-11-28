@@ -25,7 +25,7 @@ public class GestionCursos {
     private JButton ALTERARCALIFICACIONButton;
     private JButton CERRARINSCRIPCIONESButton;
     private JButton FINALIZARCURSOButton;
-    private JPanel panel1;
+    private JPanel cursosPanel;
     private JButton regresarButton;
     private JButton CARGARALUMNOSButton;
     private final DefaultTableModel tablaAlumnosmod = new DefaultTableModel();
@@ -204,7 +204,7 @@ public class GestionCursos {
 
     public void setVisible(boolean visible) {
         JFrame frame = new JFrame("GESTIÓN DE CURSOS");
-        frame.setContentPane(panel1);
+        frame.setContentPane(cursosPanel);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.pack();
         frame.setLocationRelativeTo(null);

@@ -13,31 +13,28 @@ public class CargaABD {
     private final Conexion_DB r = new Conexion_DB();
 
     public void cancelarCurso(int id) throws SQLException {
-
         r.conectar();
-        String SQL = "UPDATE cursos_administracion SET estado = 7 WHERE id = ?";
+        String SQL = "UPDATE Cursos_Estados SET FK_ID_Estado = 4 WHERE FK_ID_Curso = ?";
         PreparedStatement ps;
 
         ps = r.cc().prepareStatement(SQL);
         ps.setInt(1, id);
         ps.executeUpdate();
 
-        String SQL2 = "DELETE FROM asignaciones_alumnos WHERE id_curso = ?";
+        String SQL2 = "DELETE FROM Asignaciones_Alumnos WHERE FK_ID_Curso = ?";
         PreparedStatement ps2;
 
-        ps2= r.cc().prepareStatement(SQL2);
+        ps2 = r.cc().prepareStatement(SQL2);
         ps2.setInt(1, id);
         ps2.executeUpdate();
 
         ps.close();
         ps2.close();
-
     }
 
     public void habilitarCurso(int id) throws SQLException {
-
         r.conectar();
-        String SQL = "UPDATE cursos_administracion SET estado = 2 WHERE id = ?";
+        String SQL = "UPDATE Cursos_Estados SET FK_ID_Estado = 2 WHERE FK_ID_Curso = ?";
         PreparedStatement ps;
 
         ps = r.cc().prepareStatement(SQL);
@@ -45,42 +42,43 @@ public class CargaABD {
         ps.executeUpdate();
 
         ps.close();
-
     }
 
-    public void cargarCursos (JTable table, DefaultTableModel model) throws SQLException {
-
+    public void cargarCursos(JTable table, DefaultTableModel model) throws SQLException {
         r.conectar();
 
-        String SQL = "SELECT DISTINCT cursos_administracion.id, nombres_cursos.nombre, cursos_administracion.descripcion, estados.estados, docentes.nombre, cursos_administracion.tope_alumnos FROM cursos_administracion INNER JOIN nombres_cursos, asignaciones_docentes, estados, docentes WHERE cursos_administracion.nombre = nombres_cursos.id AND asignaciones_docentes.id_docente = docentes.id AND cursos_administracion.estado = estados.id AND asignaciones_docentes.id_curso = cursos_administracion.id ORDER BY id;";
+        String SQL = "SELECT DISTINCT c.ID_Curso, c.Nombre_Curso, ec.Estado_Curso, c.Cupo " +
+                "FROM Cursos c " +
+                "INNER JOIN Cursos_Estados ce " +
+                "INNER JOIN Detalles_Cursos dc ON c.FK_ID_Detalle_Curso = dc.ID_Detalle_Curso " +
+                "INNER JOIN Estados_Cursos ec ON c.ID_Curso = ce.FK_ID_Curso " +
+                "ORDER BY c.ID_Curso";
 
         PreparedStatement ps;
         ResultSet rs;
         ps = r.cc().prepareStatement(SQL);
         rs = ps.executeQuery();
 
-        while (rs.next()){
+        while (rs.next()) {
             Object[] filas = {
-                    rs.getInt("id"),
-                    rs.getString("nombre"),
-                    rs.getString("descripcion"),
-                    rs.getString("estados"),
-                    rs.getString("nombre"),
-                    rs.getInt("tope_alumnos")
+                    rs.getInt("ID_Curso"),
+                    rs.getString("Nombre_Curso"),
+                    rs.getString("Estado_Curso"),
+                    rs.getInt("Cupo")
             };
             model.addRow(filas);
         }
         table.setModel(model);
     }
 
-    public void reiniciarCurso(int id) throws SQLException {
 
+    public void reiniciarCurso(int id) throws SQLException {
         r.conectar();
-        String SQL2 = "UPDATE cursos_administracion SET estado = 2 WHERE id_curso = ?";
+        String SQL = "UPDATE Cursos_Estados SET FK_ID_Estado = 2 WHERE FK_ID_Curso = ?";
 
         PreparedStatement ps;
-        ps = r.cc().prepareStatement(SQL2);
+        ps = r.cc().prepareStatement(SQL);
+        ps.setInt(1, id);
         ps.executeUpdate();
-
     }
 }

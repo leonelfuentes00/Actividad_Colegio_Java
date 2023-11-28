@@ -1,5 +1,7 @@
 package Login;
 
+import Administrativo.Interfaces.Administrativo.Administrativos;
+import Alumnos.InterfaceAlumno.Alumnos;
 import Conexion.*;
 import Docentes.InterfaceDocente.CrearCurso;
 import Administrativo.Interfaces.Formularios_Registro.Registro_Usuario;
@@ -16,7 +18,6 @@ public class Login {
     private JTextField UsuarioText;
     private JButton LoginButton;
     private JPasswordField ContraseñaText;
-    private JButton registroButton;
     private  static Login instance;
     private boolean credencialesValidas = false;
     private final Conexion_DB r = new Conexion_DB();
@@ -31,10 +32,10 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 int idPersona = obtenerIdPersona();
 
-                String sqlUser = "SELECT dp.Numero_Documento, p.contraseña " +
+                String sqlUser = "SELECT dp.Numero_Documento, p.contrasena " +
                         "FROM Documentos_Personas dp " +
-                        "INNER JOIN Personas p ON dp.ID_Persona = p.ID_Persona " +
-                        "WHERE dp.ID_Persona = ?";
+                        "INNER JOIN Personas p ON dp.FK_ID_Persona = p.ID_Persona " +
+                        "WHERE dp.FK_ID_Persona = ?";
 
                 Conexion_DB con = new Conexion_DB();
                 con.conectar();
@@ -46,8 +47,7 @@ public class Login {
                     ResultSet rs = ps.executeQuery();
 
                     if (rs.next()) {
-                        String numeroDocumento = rs.getString("Numero_Documento");
-                        String contraseña = rs.getString("contraseña");
+                        String contraseña = rs.getString("contrasena");
 
                         String contraseñaIngresada = ContraseñaText.getText();
 
@@ -61,19 +61,26 @@ public class Login {
                                 if (rs2.next()) {
                                     int tipoUsuario = rs2.getInt("FK_ID_Usuario");
                                     switch (tipoUsuario) {
-                                        case 1: // Administrador
-                                            //Agregar vista para el admin
-                                            break;
-                                        case 2: // Profesor
+                                        case 1 -> { // Administrador
+                                            Administrativos adm = new Administrativos();
+                                            adm.setVisible(true);
+                                            JFrame frame = (JFrame) SwingUtilities.getRoot(LoginButton);
+                                            frame.dispose();
+                                        }
+                                        case 2 -> { // Profesor
                                             CrearCurso curso = new CrearCurso();
                                             curso.setVisibleCurso(true);
-                                            break;
-                                        case 3: // Alumno
-                                            //Agregar vista p alumno
-                                            break;
-                                        default:
-                                            System.out.println("Tipo de usuario no identificado: " + tipoUsuario);
-                                            break;
+                                            JFrame frame = (JFrame) SwingUtilities.getRoot(LoginButton);
+                                            frame.dispose();
+                                        }
+                                        case 3 -> { // Alumno
+                                            Alumnos alu = new Alumnos();
+                                            alu.setVisible(true);
+                                            JFrame frame = (JFrame) SwingUtilities.getRoot(LoginButton);
+                                            frame.dispose();
+                                        }
+                                        default ->
+                                                System.out.println("Tipo de usuario no identificado: " + tipoUsuario);
                                     }
                                 } else {
                                     JOptionPane.showMessageDialog(null, "Tipo de usuario no encontrado", "Error", JOptionPane.ERROR_MESSAGE);
@@ -124,13 +131,6 @@ public class Login {
             }
         });
 
-        registroButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Registro_Usuario reg = new Registro_Usuario();
-                reg.setVisibleRegistrar(true);
-            }
-        });
     }
     public static Login getInstance() {
         if (instance == null) {
@@ -212,6 +212,7 @@ public class Login {
         JFrame frame = new JFrame("Login");
         frame.setContentPane(LoginPanel);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
         frame.pack();
         frame.setVisible(true);
     }
