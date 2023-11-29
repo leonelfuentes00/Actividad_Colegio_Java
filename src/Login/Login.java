@@ -5,6 +5,7 @@ import Alumnos.InterfaceAlumno.Alumnos;
 import Conexion.*;
 import Docentes.InterfaceDocente.CrearCurso;
 import Administrativo.Interfaces.Formularios_Registro.Registro_Usuario;
+import Docentes.InterfaceDocente.Docentes;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -68,8 +69,8 @@ public class Login {
                                             frame.dispose();
                                         }
                                         case 2 -> { // Profesor
-                                            CrearCurso curso = new CrearCurso();
-                                            curso.setVisibleCurso(true);
+                                            Docentes doc = new Docentes();
+                                            doc.setVisible(true);
                                             JFrame frame = (JFrame) SwingUtilities.getRoot(LoginButton);
                                             frame.dispose();
                                         }
