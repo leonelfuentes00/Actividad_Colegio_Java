@@ -29,9 +29,13 @@ public class CargaGestionCursos {
 
         r.conectar();
 
-        String SQL = "SELECT DISTINCT cursos_administracion.id, nombres_cursos.nombre, cursos_administracion.descripcion, estados.estados, cursos_administracion.tope_alumnos " +
-                "FROM cursos_administracion INNER JOIN nombres_cursos, asignaciones_docentes, estados " +
-                "WHERE cursos_administracion.nombre = nombres_cursos.id AND asignaciones_docentes.id_docente = ? AND cursos_administracion.estado = estados.id;";
+        String SQL = "SELECT " +
+                "c.ID_Curso, c.Nombre_Curso, c.Turno, dc.Nombre_Docente, dc.Apellido_Docente, dc.Detalle_Curso," +
+                "e.Estado_Curso, c.Cupo, dc.Limite_Ausencia, c.Desde, c.Hasta" +
+                "FROM Cursos c " +
+                "INNER JOIN Detalles_Cursos dc ON c.FK_ID_Detalle_Curso = dc.ID_Detalle_Curso " +
+                "INNER JOIN Cursos_Estados ce ON c.ID_Curso = ce.FK_ID_Curso " +
+                "INNER JOIN Estados_Cursos e ON ce.FK_ID_Estado = e.ID_Estado_Curso";
 
         ResultSet rs = null;
         PreparedStatement ps = null;
@@ -44,11 +48,17 @@ public class CargaGestionCursos {
         while (rs.next()) {
 
             Object[] fila = {
-                    rs.getInt("id"),
-                    rs.getString("nombre"),
-                    rs.getString("descripcion"),
-                    rs.getString("estados"),
-                    rs.getInt("tope_alumnos")
+                    rs.getInt("id_curso"),
+                    rs.getString("nombre_curso"),
+                    rs.getString("turno"),
+                    rs.getString("nombre_docente"),
+                    rs.getString("apellido_docente"),
+                    rs.getString("detalle_curso"),
+                    rs.getString("estado_curso"),
+                    rs.getInt("cupo"),
+                    rs.getInt("limite_ausencia"),
+                    rs.getDate("desde"),
+                    rs.getDate("hasta"),
             };
             t.addRow(fila);
         }
@@ -58,7 +68,11 @@ public class CargaGestionCursos {
 
         r.conectar();
 
-        String SQL = "SELECT id FROM docentes WHERE usuario = ?";
+        String SQL = "SELECT p.id_persona " +
+                "FROM personas p " +
+                "INNER JOIN tipos_usuarios tc ON p.id_persona = tc.fk_id_persona " +
+                "INNER JOIN usuarios u ON tc.fk_id_usuario = u.id_usuario " +
+                "WHERE u.id_usuario = 2";
 
         PreparedStatement ps;
         ResultSet rs;
@@ -69,29 +83,30 @@ public class CargaGestionCursos {
         rs = ps.executeQuery();
 
         while(rs.next()){
-            ID_DOCENTE = rs.getInt("id");
+            ID_DOCENTE = rs.getInt("id_usuario");
         }
 
     }
-    public void setEstadoCurso(int id, int estado) throws SQLException {
-
+    public void setEstadoCurso(int idCursoEstado, int nuevoEstado) throws SQLException {
         r.conectar();
-        String SQL = "UPDATE cursos_administracion SET estado = ? WHERE id = ?";
-        PreparedStatement ps;
-        ps = r.cc().prepareStatement(SQL);
-        ps.setInt(1, estado);
-        ps.setInt(2, id);
+        String SQL = "UPDATE Colegio_CtrZ.Cursos_Estados SET FK_ID_Estado = ? WHERE ID_Curso_Estado = ?";
+        PreparedStatement ps = r.cc().prepareStatement(SQL);
+        ps.setInt(1, nuevoEstado);
+        ps.setInt(2, idCursoEstado);
         ps.executeUpdate();
-
         ps.close();
-
     }
-    public void cargarAlumnos(int id_curso, JTable table, DefaultTableModel model) throws  SQLException {
 
+    public void cargarAlumnos(int id_curso, JTable table, DefaultTableModel model) throws SQLException {
         r.conectar();
 
-        String SQL = "SELECT DISTINCT alumnos.id, alumnos.nombre, estados.estados, asignaciones_alumnos.calificacion FROM alumnos INNER JOIN estados, asignaciones_alumnos WHERE asignaciones_alumnos.id_curso = ? AND"
-                + " asignaciones_alumnos.estado = 6 and estados.id = asignaciones_alumnos.estado AND asignaciones_alumnos.id_alumno = alumnos.id";
+        String SQL = "SELECT a.id, a.nombre, ec.Estado_Curso, c.Calificacion " +
+                "FROM Colegio_CtrZ.Inscripciones i " +
+                "INNER JOIN Colegio_CtrZ.Personas a ON i.FK_ID_Persona = a.ID_Persona " +
+                "INNER JOIN Colegio_CtrZ.Estados_Inscripciones ei ON i.FK_ID_Estado_Inscripcion = ei.ID_Estado_Inscripcion " +
+                "INNER JOIN Colegio_CtrZ.Calificaciones c ON i.FK_ID_Persona = c.FK_ID_Persona AND i.FK_ID_Curso = c.FK_ID_Modulo " +
+                "WHERE i.FK_ID_Curso = ? AND ei.Estado_Inscripcion = 'Inscripto'";
+
         PreparedStatement ps;
         ResultSet rs;
         ps = r.cc().prepareStatement(SQL);
@@ -102,25 +117,27 @@ public class CargaGestionCursos {
             Object[] filas = {
                     rs.getInt("id"),
                     rs.getString("nombre"),
-                    rs.getString("estados"),
-                    rs.getFloat("calificacion")
+                    rs.getString("Estado_Curso"),
+                    rs.getFloat("Calificacion")
             };
             model.addRow(filas);
         }
         table.setModel(model);
     }
-    public void setCalificacion(JTable tabla, DefaultTableModel model, int id_curso) throws SQLException {
 
+    public void setCalificacion(JTable tabla, DefaultTableModel model, int id_curso) throws SQLException {
         int row = tabla.getSelectedRow();
 
-        int id_alumno = (int) model.getValueAt(row, 0);
-        if (id_alumno == -1){
+        if (row == -1){
             JOptionPane.showMessageDialog(null, "No seleccionó ningún alumno");
         } else {
-            float calificacion = Float.parseFloat(JOptionPane.showInputDialog("Introduzca la calificacion"));
+            int id_alumno = (int) model.getValueAt(row, 0);
+            float calificacion = Float.parseFloat(JOptionPane.showInputDialog("Introduzca la calificación"));
+
             r.conectar();
 
-            String SQL = "UPDATE asignaciones_alumnos SET calificacion = ? WHERE id_curso = ? AND id_alumno = ?";
+            String SQL = "UPDATE Colegio_CtrZ.Calificaciones SET Calificacion = ? " +
+                    "WHERE FK_ID_Modulo = ? AND FK_ID_Persona = ?";
             PreparedStatement ps;
             ps = r.cc().prepareStatement(SQL);
             ps.setFloat(1, calificacion);
@@ -129,16 +146,17 @@ public class CargaGestionCursos {
             ps.executeUpdate();
         }
     }
+
     public void aprobarCursada(int id_curso, JTable tabla, DefaultTableModel model) throws SQLException {
-
         int row = tabla.getSelectedRow();
 
-        int id_alumno = (int) model.getValueAt(row, 0);
-        if (id_alumno == -1) {
+        if (row == -1) {
             JOptionPane.showMessageDialog(null, "No seleccionó ningún alumno");
         } else {
+            int id_alumno = (int) model.getValueAt(row, 0);
             r.conectar();
-            String SQL = "UPDATE asignaciones_alumnos SET estado = 4 WHERE id_curso = ? AND id_alumno = ?";
+            String SQL = "UPDATE Colegio_CtrZ.Inscripciones SET FK_ID_Estado_Inscripcion = 4 " +
+                    "WHERE FK_ID_Curso = ? AND FK_ID_Persona = ?";
             PreparedStatement ps;
             ps = r.cc().prepareStatement(SQL);
             ps.setInt(1, id_curso);
@@ -146,16 +164,17 @@ public class CargaGestionCursos {
             ps.executeUpdate();
         }
     }
+
     public void desaprobarCursada(int id_curso, JTable tabla, DefaultTableModel model) throws SQLException {
-
         int row = tabla.getSelectedRow();
 
-        int id_alumno = (int) model.getValueAt(row, 0);
-        if (id_alumno == -1){
+        if (row == -1){
             JOptionPane.showMessageDialog(null, "No seleccionó ningún alumno");
         } else {
+            int id_alumno = (int) model.getValueAt(row, 0);
             r.conectar();
-            String SQL = "UPDATE asignaciones_alumnos SET estado = 5 WHERE id_curso = ? AND id_alumno = ?";
+            String SQL = "UPDATE Colegio_CtrZ.Inscripciones SET FK_ID_Estado_Inscripcion = 5 " +
+                    "WHERE FK_ID_Curso = ? AND FK_ID_Persona = ?";
             PreparedStatement ps;
             ps = r.cc().prepareStatement(SQL);
             ps.setInt(1, id_curso);
@@ -163,11 +182,11 @@ public class CargaGestionCursos {
             ps.executeUpdate();
         }
     }
-    public void expulsar(int id_alumno, int id_curso) throws SQLException {
 
+    public void expulsar(int id_alumno, int id_curso) throws SQLException {
         r.conectar();
 
-        String SQL = "DELETE FROM asignaciones_alumnos WHERE id_curso = ? AND id_alumno = ?";
+        String SQL = "DELETE FROM Colegio_CtrZ.Inscripciones WHERE FK_ID_Curso = ? AND FK_ID_Persona = ?";
         PreparedStatement ps;
         ps = r.cc().prepareStatement(SQL);
 
